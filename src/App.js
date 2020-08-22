@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import logo from './logo.svg';
 import './App.css';
 
@@ -18,6 +18,7 @@ function App() {
     <div className="App">
       <header className="App-header">
         <Counter></Counter>
+        <Users></Users>
         <ul style={{ textAlign: 'left' }}>
           {
             friends.map(friend => <li>{friend}</li>)
@@ -40,11 +41,38 @@ function App() {
   );
 }
 
+function Users() {
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    fetch('https://jsonplaceholder.typicode.com/users')
+      .then(res => res.json())
+      .then(data => setUsers(data))
+  }, [])
+
+  return (
+    <div>
+      <h3>Dynamic Users</h3>
+      <ul>
+        {
+          users.map(user => <li>{user.name}</li>)
+        }
+      </ul>
+    </div>
+  );
+}
+
 function Counter() {
-  const [count, setCount] = useState(10)
+  const [count, setCount] = useState(1)
+  const handleIncrease = () => {
+    const newCount = count + 1;
+    setCount(newCount);
+  };
   return (
     <div>
       <h1>Count: {count}</h1>
+      <button onClick={() => setCount(count - 1)}>Decrease</button>
+      <button onClick={handleIncrease}>Increase</button>
     </div>
   );
 }
